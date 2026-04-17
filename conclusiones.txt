@@ -1,0 +1,20 @@
+Conclusiones de la Prueba de Carga - Servicio Login (FakeStoreAPI)
+
+1. Resumen de la Ejecución
+Se completó el ejercicio de performance sobre el servicio de autenticación (/auth/login), logrando estabilizar la carga en el objetivo de rendimiento de 20 TPS (Transacciones por Segundo). Para ello, se configuró un escenario con 30 hilos y un Constant Throughput Timer ajustado a 1200 muestras por minuto.
+
+2. Hallazgos Técnicos y Validaciones
+
+    Tiempos de Respuesta: Mediante la implementación de un Duration Assertion, se validó que las peticiones se procesaran en un tiempo máximo de 1.5 segundos. El promedio observado durante la prueba estable fue de 449 ms, cumpliendo en parte con el criterio de aceptación.
+
+    Tasa de Errores: Tras corregir la parametrización de las credenciales (user, passwd) para coincidir con la base de datos de la API, se logró reducir la tasa de error por debajo del 3% solicitado.
+
+    Parametrización: Se validó el flujo de datos dinámicos utilizando un archivo .csv con 5 juegos de credenciales distintos, asegurando que la prueba no dependiera de un único usuario .
+
+3. Evaluación de Criterios de Aceptación
+Requerimiento	Meta	Resultado	Estado
+Rendimiento (TPS)	>= 20 TPS	19.6 - 20 TPS	Exitoso
+Tiempo de Respuesta	<= 1.5s	~449 ms (Promedio)	Exitoso
+Tasa de Error	< 3%	>=16% 				No Exitoso
+
+4. El código de respuesta 401 Unauthorized confirma que el problema no es la carga ni la velocidad (especialmente porque persiste al bajar a 5 TPS), sino la autenticación. La API está rechazando alguna de las credenciales que se está enviando.
